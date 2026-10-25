@@ -3,6 +3,7 @@ import tb from '@/styles/toolbar.module.css'
 interface Props {
   isMobile: boolean
   onClose: () => void
+  onAnimation: () => void
   onExport: () => void
   onGradient: () => void
   onColors: () => void
@@ -29,6 +30,7 @@ export function BurgerMenu(p: Props) {
         <button onClick={run(p.onColors)}>Цвета</button>
       </>}
 
+      <button onClick={run(p.onAnimation)}>Анимации меню</button>
       <div className={tb.burgerSection}>Проект</div>
       <button onClick={run(p.onNewProject)}>Новый проект</button>
       <button onClick={run(p.onOpenProject)}>Открыть проект</button>

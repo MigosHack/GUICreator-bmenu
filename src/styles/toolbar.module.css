@@ -96,7 +96,10 @@
     min-height: 44px;
     gap: var(--sp-xs);
     flex-wrap: nowrap;
-    overflow: hidden;
+    /* Fixed mobile menu must be positioned against the viewport. */
+    overflow: visible;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
   .projName {
     min-width: 0;

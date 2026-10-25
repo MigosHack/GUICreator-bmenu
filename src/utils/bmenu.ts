@@ -150,7 +150,7 @@ export function parseBMenu(raw: string): Project | null {
   return project
 }
 
-function itemToSlot(key: string, it: Obj): SlotData {
+export function itemToSlot(key: string, it: Obj): SlotData {
   let material = String(it.material ?? 'stone')
   let skullTexture: string | null = null
   const extra: Obj = {}
@@ -228,9 +228,15 @@ export function toBMenu(project: Project, opts: BMenuExportOptions = {}): string
 
   for (const [k, v] of Object.entries(meta?.extra ?? {})) if (!(k in doc)) doc[k] = v
 
+  doc.items = buildBMenuItems(project)
+  return stringifyYaml(doc, { lineWidth: 0, defaultStringType: 'QUOTE_DOUBLE', defaultKeyType: 'PLAIN' })
+}
+
+/** Shared with animation preview so item references match exported identifiers. */
+export function buildBMenuItems(project: Project): Obj {
   // группируем одинаковые предметы в один ключ со списком слотов
   const groups: Array<{ key: string; item: Obj; slots: number[]; sig: string }> = []
-  const usedKeys = new Set<string>()
+  const usedKeys = new Set<string>(Object.keys(project.bmenu?.unplaced ?? {}))
   const keys = Object.keys(project.slots).sort((a, b) => slotNumber(project, a) - slotNumber(project, b))
   for (const k of keys) {
     const item = slotToItem(project.slots[k])
@@ -246,14 +252,12 @@ export function toBMenu(project: Project, opts: BMenuExportOptions = {}): string
 
   const items: Obj = {}
   for (const g of groups) items[g.key] = { slot: writeSlots(g.slots), ...g.item }
-  for (const [k, v] of Object.entries(meta?.unplaced ?? {})) {
+  for (const [k, v] of Object.entries(project.bmenu?.unplaced ?? {})) {
     let name = k
     for (let i = 2; name in items; i++) name = `${k}_${i}`
     items[name] = v
   }
-  doc.items = items
-
-  return stringifyYaml(doc, { lineWidth: 0, defaultStringType: 'QUOTE_DOUBLE', defaultKeyType: 'PLAIN' })
+  return items
 }
 
 function slotToItem(sl: SlotData): Obj {

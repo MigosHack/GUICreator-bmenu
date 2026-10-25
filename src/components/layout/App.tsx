@@ -1,3 +1,4 @@
+import { AnimationModal } from '@/components/modals/AnimationModal'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import type { SlotData, SlotPreset, Workspace, Project } from '@/types'
 import { useProjectStore } from '@/store/projectStore'
@@ -35,6 +36,7 @@ export function App() {
   const { selSlot, selectSlot, toggleMulti, clearSlotSelection } = useSelectionStore()
   const [palItem, setPalItem] = useState<string | null>(null)
   const [palPreset, setPalPreset] = useState<SlotPreset | null>(null)
+  const [showAnimation, setShowAnimation] = useState(false)
   const [showExport, setShowExport] = useState(false)
   const [showGrad, setShowGrad] = useState(false)
   const [showColorPicker, setShowColorPicker] = useState(false)
@@ -291,12 +293,13 @@ export function App() {
           <div className={tb.group}>
             <GlowButton onClick={toggleNums} variant={showNums ? 'primary' : 'ghost'} data-tip="Номера слотов">#</GlowButton>
             <GlowButton onClick={toggleConns} variant={showConns ? 'primary' : 'ghost'} data-tip="Стрелки связей">→</GlowButton>
-            <GlowButton onClick={toggleAnimations} variant={animations ? 'primary' : 'ghost'} data-tip="Анимации">✦</GlowButton>
+            <GlowButton onClick={toggleAnimations} variant={animations ? 'primary' : 'ghost'} data-tip="Эффекты интерфейса">✦</GlowButton>
           </div>
         </>}
         <div className={tb.spacer} />
         <div className={tb.group}>
           {!isMobile && <>
+            <GlowButton onClick={() => setShowAnimation(true)}>Анимации</GlowButton>
             <GlowButton onClick={() => setShowGrad(true)}>Градиент</GlowButton>
             <GlowButton onClick={() => setShowColorPicker(true)}>Цвета</GlowButton>
             <GlowButton variant="primary" onClick={() => setShowExport(true)}>Экспорт</GlowButton>
@@ -308,6 +311,7 @@ export function App() {
               <BurgerMenu
                 isMobile={isMobile}
                 onClose={() => setShowMenu(false)}
+                onAnimation={() => setShowAnimation(true)}
                 onExport={() => setShowExport(true)}
                 onGradient={() => setShowGrad(true)}
                 onColors={() => setShowColorPicker(true)}
@@ -435,6 +439,7 @@ export function App() {
       <StatusBar palItem={palItem} rows={proj.rows} slotCount={Object.keys(proj.slots).length} saveStatus={saveStatus} />
 
       {htt && <HoverTooltip data={htt.data} x={htt.x} y={htt.y} />}
+      {showAnimation && <AnimationModal key={proj.id} project={proj} onClose={() => setShowAnimation(false)} />}
       {showExport && <ExportModal project={proj} onClose={() => setShowExport(false)} />}
       {showGrad && <GradientModal onClose={() => setShowGrad(false)} />}
       {showColorPicker && <ColorPickerModal onClose={() => setShowColorPicker(false)} />}

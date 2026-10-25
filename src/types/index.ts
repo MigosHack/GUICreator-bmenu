@@ -51,6 +51,13 @@ export interface BMenuSlotMeta {
   extra?: Record<string, unknown>
 }
 
+/** Native BMenu frame; unknown fields and opcode values survive round trips. */
+export interface AnimationFrame {
+  tick: number
+  opcodes: Record<string, unknown>[]
+  [key: string]: unknown
+}
+
 export interface BMenuProjectMeta {
   /** исходный заголовок и его seg2mm-вид */
   rawTitle?: string
@@ -119,6 +126,7 @@ export interface ItemCategory {
 export type ItemDatabase = Record<string, ItemCategory>
 
 export type ProjectAction =
+  | { type: 'ANIM'; name: string; frames: AnimationFrame[] | null }
   | { type: 'SS'; key: string; data: SlotData }
   | { type: 'SM'; slots: Record<string, SlotData> }
   | { type: 'RS'; key: string }

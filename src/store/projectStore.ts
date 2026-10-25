@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { Project, SlotData, UndoableState } from '@/types'
+import type { Project, SlotData, AnimationFrame } from '@/types'
 import { newProject } from '@/utils/slot'
 import { saveProject, loadProject, loadProjectList, loadPrefs, savePrefs } from '@/storage'
 import { getGuiType } from '@/data/guiTypes'
@@ -7,6 +7,17 @@ import { getGuiType } from '@/data/guiTypes'
 function applyAction(p: Project, action: ProjectStoreAction): Project {
   const r = { ...p, updatedAt: Date.now() }
   switch (action.type) {
+    case 'ANIM': {
+      const extra = { ...r.bmenu?.extra }
+      if (action.name === '') extra.animation = action.frames ?? []
+      else {
+        const saved = extra.animations
+        const animations: Record<string, unknown> = { ...(saved && typeof saved === 'object' && !Array.isArray(saved) ? saved : {}) }
+        if (action.frames === null) delete animations[action.name]
+        extra.animations = action.frames === null ? animations : { ...animations, [action.name]: action.frames }
+      }
+      return { ...r, bmenu: { ...r.bmenu, extra } }
+    }
     case 'SS': { const sl = { ...r.slots }; sl[action.key] = action.data; return { ...r, slots: sl } }
     case 'SM': { const sl = { ...r.slots }; for (const [k, v] of Object.entries(action.slots)) sl[k] = v; return { ...r, slots: sl } }
     case 'RS': { const sl = { ...r.slots }; delete sl[action.key]; return { ...r, slots: sl } }
@@ -46,6 +57,7 @@ function applyAction(p: Project, action: ProjectStoreAction): Project {
 }
 
 type ProjectStoreAction =
+  | { type: 'ANIM'; name: string; frames: AnimationFrame[] | null }
   | { type: 'SS'; key: string; data: SlotData }
   | { type: 'SM'; slots: Record<string, SlotData> }
   | { type: 'RS'; key: string }

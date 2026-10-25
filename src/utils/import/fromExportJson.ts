@@ -1,7 +1,8 @@
-import type { Project, SlotData, TextSegment } from '@/types'
+import type { Project, SlotData, TextSegment, BMenuProjectMeta, BMenuSlotMeta } from '@/types'
 import { newProject } from '@/utils/slot'
 
 interface ExportSlot {
+  bmenu?: BMenuSlotMeta
   slot: number
   material: string
   displayName?: { segments?: TextSegment[] }
@@ -17,6 +18,7 @@ interface ExportSlot {
 }
 
 interface ExportJson {
+  bmenu?: BMenuProjectMeta
   menu?: { title?: string; rows?: number; guiType?: string }
   slots?: ExportSlot[]
 }
@@ -26,6 +28,7 @@ export function fromExportJson(data: unknown): Project | null {
   if (!d || typeof d !== 'object' || !d.menu || !Array.isArray(d.slots)) return null
   const rows = d.menu.rows && d.menu.rows > 0 ? d.menu.rows : 6
   const p = newProject(d.menu.title || 'Импорт', rows)
+  if (d.bmenu?.extra && typeof d.bmenu.extra === 'object' && !Array.isArray(d.bmenu.extra)) p.bmenu = structuredClone(d.bmenu)
   if (d.menu.guiType) p.guiType = d.menu.guiType
   const isGui = !!d.menu.guiType
   for (const sl of d.slots) {
@@ -43,6 +46,7 @@ export function fromExportJson(data: unknown): Project | null {
       skullTexture: sl.skullTexture ?? null,
       armorTrim: sl.armorTrim ?? null,
     }
+    if (sl.bmenu && typeof sl.bmenu.key === 'string') slot.bmenu = structuredClone(sl.bmenu)
     p.slots[key] = slot
   }
   return p

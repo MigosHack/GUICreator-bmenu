@@ -51,8 +51,10 @@ export function ExportModal({ project, onClose }: Props) {
     if (tab === 'json') {
       const slotCount = gt ? gt.slots.length : project.rows * 9
       return JSON.stringify({
+        ...(project.bmenu ? { bmenu: project.bmenu } : {}),
         menu: { title: project.name, size: slotCount, rows: project.rows, ...(gt ? { guiType: gt.id } : {}) },
         slots: filled.map((sl: any) => ({
+          ...(sl.bmenu ? { bmenu: sl.bmenu } : {}),
           slot: sl.slot, material: sl.itemId.toUpperCase(),
           displayName: { legacy: seg2leg(sl.displayName), minimessage: seg2mm(sl.displayName), segments: sl.displayName },
           lore: { legacy: sl.lore.map((l: any) => seg2leg(l)), minimessage: sl.lore.map((l: any) => seg2mm(l)), segments: sl.lore },
