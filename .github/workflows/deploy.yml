@@ -2,7 +2,8 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [master]
+    branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -23,6 +24,7 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
+      - run: npm test -- --maxWorkers=4
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
@@ -35,5 +37,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - uses: actions/configure-pages@v5
       - id: deployment
         uses: actions/deploy-pages@v4
