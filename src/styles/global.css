@@ -1,0 +1,164 @@
+@font-face {
+  font-family: 'Minecraft';
+  src: url('/assets/fonts/Mojangles.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; overscroll-behavior: none; -webkit-text-size-adjust: 100%; }
+
+:root {
+  /* Glass Aurora tokens */
+  --glass-bg: #0f0720;
+  --glass-panel: rgba(255,255,255,0.04);
+  --glass-surface: rgba(255,255,255,0.06);
+  --glass-hover: rgba(255,255,255,0.10);
+  --glass-border: rgba(255,255,255,0.08);
+  --glass-blur: blur(12px);
+
+  /* Accents */
+  --accent: #8b5cf6;
+  --accent-glow: 0 0 20px rgba(139,92,246,0.3);
+  --accent-subtle: rgba(139,92,246,0.15);
+
+  /* Ambient */
+  --glow-purple: radial-gradient(circle, rgba(124,58,237,0.15), transparent);
+  --glow-blue: radial-gradient(circle, rgba(59,130,246,0.10), transparent);
+
+  /* Spacing */
+  --sp-xs: 4px;
+  --sp-sm: 8px;
+  --sp-md: 12px;
+  --sp-lg: 16px;
+  --sp-xl: 24px;
+  --sp-2xl: 32px;
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  /* Legacy aliases */
+  --tx1: #e4e4e7;
+  --tx2: #8b8b96;
+  --tx3: #5a5a64;
+  --ac: #8b5cf6;
+  --ac2: #7c3aed;
+  --ac-g: rgba(139,92,246,0.15);
+  --ok: #4ade80;
+  --er: #f87171;
+  --inf: #60a5fa;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--glass-bg);
+  color: var(--tx1);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+input, select, button, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+button { cursor: pointer; border: none; background: none; }
+
+input, textarea {
+  background: var(--glass-surface);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  color: var(--tx1);
+  outline: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+input:focus, textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(139,92,246,0.15);
+}
+textarea { resize: vertical; min-height: 60px; }
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--glass-surface);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 6px 28px 6px 10px;
+  color: var(--tx1);
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 5l3 3 3-3' stroke='%238b8b96' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+select:hover { border-color: rgba(255,255,255,0.15); }
+select:focus { border-color: var(--accent); box-shadow: 0 0 12px rgba(139,92,246,0.15); }
+option { background: #1a1028; color: var(--tx1); padding: 6px; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+
+#root { height: 100vh; height: 100dvh; display: flex; flex-direction: column; }
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+[data-tip] {
+  position: relative;
+}
+[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 7, 32, 0.95);
+  color: #e4e4e7;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 10px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 100ms;
+  z-index: 10000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+[data-tip]:hover::after {
+  opacity: 1;
+}
+[data-tip-down] {
+  position: relative;
+}
+[data-tip-down]::after {
+  content: attr(data-tip-down);
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 7, 32, 0.95);
+  color: #e4e4e7;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 10px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 100ms;
+  z-index: 10000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+[data-tip-down]:hover::after {
+  opacity: 1;
+}
